@@ -1,7 +1,29 @@
-# Tauri + React + Typescript
+# modes 
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+an automated profile switcher. enter what you want.
 
-## Recommended IDE Setup
+(work) -> modes will close background apps, clear up memory, open your work apps, open your projets and you're good to go.
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+> **example:** switch to `(work)` mode, and Modes will automatically close distracting background apps, clear up system memory, launch your designated work applications, and open your active projects so you're ready to go instantly.
+
+---
+
+## prerequisites
+
+Before running the project locally, ensure you have the following installed:
+
+* **Node.js** (including `npm` and `pnpm`)
+* **React** (frontend framework used)
+* **Rust** (required for the Tauri backend)
+* **Tauri CLI**
+
+## getting gtarted
+
+Follow these steps to clone the repository and run the application in development mode:
+
+```bash
+git clone [https://github.com/adi-tiw/modes](https://github.com/adi-tiw/modes)
+cd modes
+pnpm install
+pnpm tauri dev
+```
