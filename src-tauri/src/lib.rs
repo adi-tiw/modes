@@ -1,9 +1,10 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+mod execute;
 mod shortcut;
 
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn open_app(app: String) {
+    execute::run_open_app(&app);
 }
 
 pub fn run() {
@@ -15,6 +16,7 @@ pub fn run() {
             shortcut::change_shortcut,
             shortcut::unregister_shortcut,
             shortcut::get_current_shortcut,
+            open_app,
         ])
         .setup(|app| {
             shortcut::enable_shortcut(app);

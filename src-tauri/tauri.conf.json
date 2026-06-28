@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "modes",
-        "width": 600,
-        "height": 80,
+        "width": 250,
+        "height": 60,
         "decorations": false,
         "transparent": true,
         "center": true,
