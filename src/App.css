@@ -1,27 +1,38 @@
-html,
-body {
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
   background: transparent !important;
+  -webkit-app-region: no-drag;
   overflow: hidden;
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
   color: #ffffff;
 }
 
 #root {
-  width: 600px;
-  height: 80px;
-  background: rgba(20, 20, 20, 0.7); /* 70% opacity */
-  border-radius: 16px;
-  border: none; /* Removed the weird border */
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  /* Pure black at 82% — identical to how macOS Spotlight renders */
+  background: rgba(0, 0, 0, 0.90);
+  border-radius: 0;
+  border: none;
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 5%;
 }
 
 .container {
@@ -30,74 +41,36 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
-  padding: 0;
-}
-
-/* Hide the boilerplate headers, logos, and tutorial texts */
-h1,
-.container > .row:first-of-type,
-.container > p:first-of-type {
-  display: none;
 }
 
 .search-input {
   width: 100%;
-  height: 48px;
+  height: 60%;
+  min-height: 28px;
   background: transparent;
-  border: 2px solid #39ff14; /* Glowing neon green square border */
-  border-radius: 4px; /* Sleek modern square corners */
-  padding: 0 16px;
-  font-size: 18px;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: #ffffff;
+  border: 1px solid rgba(180, 30, 30, 0.6); /* Subtle dark-red border at rest */
+  border-radius: 0; /* Sharp rectangle */
+  padding: 0 4%;
+  font-size: clamp(12px, 2.5vw, 15px);
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-weight: 400;
+  color: rgba(255, 220, 220, 0.9);
   outline: none;
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.3), inset 0 0 5px rgba(57, 255, 20, 0.1);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  caret-color: rgba(220, 60, 60, 0.9);
+  border: none;
+
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(200, 100, 100, 0.35);
+  font-weight: 300;
+  letter-spacing: 0.06em;
 }
 
 .search-input:focus {
-  border-color: #39ff14;
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 18px rgba(57, 255, 20, 0.7), 
-              0 0 36px rgba(57, 255, 20, 0.3), 
-              inset 0 0 10px rgba(57, 255, 20, 0.2);
+  border-color: rgba(200, 40, 40, 0.85);
+  box-shadow: 0 0 0 1px rgba(180, 30, 30, 0.4),
+              inset 0 0 12px rgba(120, 0, 0, 0.15);
 }
-
-button {
-  background: #ffffff;
-  color: #000000;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-1px);
-}
-
-button:active {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateY(0);
-}
-
-/* Output response text style */
-.container > p:last-of-type {
-  position: absolute;
-  bottom: -35px;
-  left: 10px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-  pointer-events: none;
-}
-

@@ -18,7 +18,8 @@
         "decorations": false,
         "transparent": true,
         "center": true,
-        "visible": false
+        "visible": false,
+        "shadow": false
       }
     ],
     "security": {
