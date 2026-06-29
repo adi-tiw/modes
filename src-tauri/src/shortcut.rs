@@ -118,7 +118,7 @@ fn _register_shortcut<R: Runtime>(app: &AppHandle<R>, shortcut: Shortcut) {
         .map_err(|err| format!("Failed to register the new shortcut'{}' ", err))
         .unwrap();
 }
-
+    
 //Helper function to register shortcuts during application startup.
 
 fn _register_shortcut_upon_start(app: &App, shortcut: Shortcut) {

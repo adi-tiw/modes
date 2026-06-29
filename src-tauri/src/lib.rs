@@ -18,6 +18,7 @@ pub fn run() {
             shortcut::unregister_shortcut,
             shortcut::get_current_shortcut,
             open_app,
+            execute::hide_app_after_cmd,
         ])
         .setup(|app| {
             #[cfg(target_os = "macos")]
