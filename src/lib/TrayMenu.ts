@@ -5,7 +5,7 @@ export default function TrayMenu(){
 
 }
 
-const menu = await Menu.new({
+const _menu = await Menu.new({
     items: [
         {
             id: 'quit',
@@ -21,9 +21,9 @@ const menu = await Menu.new({
     ],
 });
 
-const options = {
-    menu,
+const _options = {
+    menu: _menu,
     menuOnLeftClick: true,
 };
 
-const tray = await TrayIcon.new(options);
+export const tray = await TrayIcon.new(_options);

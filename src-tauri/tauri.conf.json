@@ -14,6 +14,7 @@
     "windows": [
       {
         "title": "modes",
+        "label": "main",
         "width": 250,
         "height": 60,
         "decorations": false,
@@ -21,7 +22,18 @@
         "center": true,
         "visible": false,
         "shadow": false,
-        "resizable": false
+        "resizable": false,
+        "url": "index.html"
+      },
+      {
+        "title": "Settings",
+        "label": "settings",
+        "width": 800,
+        "height": 800,
+        "decorations": true,
+        "center": true,
+        "resizable": true,
+        "url": "settings.html"
       }
     ],
     "security": {
