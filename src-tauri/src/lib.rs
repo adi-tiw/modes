@@ -1,4 +1,5 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+use tauri::tray::TrayIconBuilder;
 mod execute;
 mod shortcut;
 
@@ -8,7 +9,7 @@ fn open_app(app: String) {
 }
 
 pub fn run() {
-    let mut ctx = tauri::generate_context!();
+    let ctx = tauri::generate_context!();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
@@ -19,8 +20,15 @@ pub fn run() {
             open_app,
         ])
         .setup(|app| {
+            #[cfg(target_os = "macos")]
+            {
+                use tauri::ActivationPolicy;
+                app.set_activation_policy(ActivationPolicy::Accessory);
+            }
+            let _tray = TrayIconBuilder::new()
+                .icon(app.default_window_icon().unwrap().clone())
+                .build(app)?;
             shortcut::enable_shortcut(app);
-
             Ok(())
         })
         .run(ctx)

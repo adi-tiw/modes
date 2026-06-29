@@ -9,6 +9,7 @@
     "beforeBuildCommand": "pnpm build",
     "frontendDist": "../dist"
   },
+
   "app": {
     "windows": [
       {
@@ -19,7 +20,8 @@
         "transparent": true,
         "center": true,
         "visible": false,
-        "shadow": false
+        "shadow": false,
+        "resizable": false
       }
     ],
     "security": {
