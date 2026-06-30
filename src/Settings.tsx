@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { SidePanel } from "./components/SidePanel";
 import "./Settings.css";
@@ -10,22 +10,72 @@ interface Profile {
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<"profiles" | "appearance">("profiles");
-  const [profiles, setProfiles] = useState<Profile[]>([
-    { name: "Work", apps: ["Visual Studio Code", "Slack", "Google Chrome", "Terminal"] },
-    { name: "Personal", apps: ["Spotify", "Discord", "Steam"] },
-    { name: "Study", apps: ["Notion", "Anki", "Safari"] },
-  ]);
-  const [selectedProfileName, setSelectedProfileName] = useState<string>("Work");
   const [newAppName, setNewAppName] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedProfile = profiles.find((p) => p.name === selectedProfileName) || profiles[0];
+  // Load profiles from localStorage or fall back to default
+  const [profiles, setProfiles] = useState<Profile[]>(() => {
+    const saved = localStorage.getItem("modes_profiles");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error("Failed to parse saved profiles:", e);
+      }
+    }
+    return [{ name: "Work", apps: [] }];
+  });
+
+  // Load selected profile name from localStorage or fall back to default
+  const [selectedProfileName, setSelectedProfileName] = useState<string>(() => {
+    const saved = localStorage.getItem("modes_selected_profile");
+    if (saved) {
+      return saved;
+    }
+    return "Work";
+  });
+
+  // Sync profiles to localStorage
+  useEffect(() => {
+    localStorage.setItem("modes_profiles", JSON.stringify(profiles));
+  }, [profiles]);
+
+  // Sync selectedProfileName to localStorage
+  useEffect(() => {
+    if (selectedProfileName) {
+      localStorage.setItem("modes_selected_profile", selectedProfileName);
+    }
+  }, [selectedProfileName]);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Compute selected profile with robust fallback structure
+  const selectedProfile =
+    profiles.find((p) => p.name === selectedProfileName) ||
+    profiles[0] ||
+    { name: "", apps: [] };
 
   const handleAddApp = () => {
     if (!newAppName.trim()) return;
     setProfiles(
       profiles.map((p) => {
-        if (p.name === selectedProfileName) {
+        if (p.name === selectedProfile.name) {
           if (!p.apps.includes(newAppName.trim())) {
             return { ...p, apps: [...p.apps, newAppName.trim()] };
           }
@@ -40,7 +90,7 @@ export default function SettingsPage() {
   const handleRemoveApp = (appName: string) => {
     setProfiles(
       profiles.map((p) => {
-        if (p.name === selectedProfileName) {
+        if (p.name === selectedProfile.name) {
           return { ...p, apps: p.apps.filter((a) => a !== appName) };
         }
         return p;
@@ -55,6 +105,8 @@ export default function SettingsPage() {
       if (!profiles.some((p) => p.name.toLowerCase() === trimmed.toLowerCase())) {
         setProfiles([...profiles, { name: trimmed, apps: [] }]);
         setSelectedProfileName(trimmed);
+      } else {
+        alert("A profile with this name already exists.");
       }
     }
   };
@@ -64,8 +116,8 @@ export default function SettingsPage() {
       alert("You must keep at least one profile.");
       return;
     }
-    if (confirm(`Are you sure you want to delete profile "${selectedProfileName}"?`)) {
-      const remaining = profiles.filter((p) => p.name !== selectedProfileName);
+    if (confirm(`Are you sure you want to delete profile "${selectedProfile.name}"?`)) {
+      const remaining = profiles.filter((p) => p.name !== selectedProfile.name);
       setProfiles(remaining);
       setSelectedProfileName(remaining[0].name);
     }
@@ -79,19 +131,31 @@ export default function SettingsPage() {
         {activeTab === "profiles" ? (
           <div className="profiles-content">
             <div className="control-header">
-              <div className="dropdown-wrapper">
-                <select
-                  value={selectedProfileName}
-                  onChange={(e) => setSelectedProfileName(e.target.value)}
-                  className="profile-select"
+              <div className="profile-selector-container" ref={dropdownRef}>
+                <button
+                  className="profile-dropdown-trigger"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  title="Select Profile"
                 >
-                  {profiles.map((p) => (
-                    <option key={p.name} value={p.name}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="select-arrow">▼</div>
+                  ▼
+                </button>
+                <span className="profile-title">{selectedProfile.name}</span>
+                {isDropdownOpen && (
+                  <div className="profile-dropdown-menu">
+                    {profiles.map((p) => (
+                      <div
+                        key={p.name}
+                        className={`profile-dropdown-item ${p.name === selectedProfile.name ? "active" : ""}`}
+                        onClick={() => {
+                          setSelectedProfileName(p.name);
+                          setIsDropdownOpen(false);
+                        }}
+                      >
+                        {p.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="search-app-wrapper">
@@ -119,7 +183,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="apps-list-container">
-              <h3>Apps in {selectedProfileName} Mode</h3>
+              <h3>Apps in {selectedProfile.name} Mode</h3>
               <div className="apps-grid">
                 {selectedProfile.apps.length > 0 ? (
                   selectedProfile.apps.map((app) => (
